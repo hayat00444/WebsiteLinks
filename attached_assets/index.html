@@ -1,0 +1,156 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goa Games</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #e3f2fd; /* Light blue background */
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        h2 {
+            color: #ff9800; /* Orange heading */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .game-section {
+            background-color: #ffffff; /* White background for game sections */
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .game-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1565c0; /* Dark blue text color */
+        }
+
+        .game-description {
+            font-size: 14px;
+            color: #666; /* Gray text */
+        }
+
+        /* Bottom Navigation Bar */
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            background-color: #1565c0; /* Dark blue background */
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 70px; /* Increased height for icons */
+        }
+
+        .nav-button {
+            flex: 1;
+            text-align: center;
+        }
+
+        .nav-button button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer; /* Pointer cursor on hover */
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center align items */
+        }
+
+        .nav-button button:focus {
+            outline: none;
+        }
+
+        .nav-button button:hover {
+            background-color: #ff9800; /* Orange on hover */
+            border-radius: 10px;
+        }
+
+        /* Icon styles */
+        .icon {
+            font-size: 24px; /* Icon size */
+            margin-top: 5px; /* Spacing between text and icon */
+        }
+
+        /* Hide overflow of nav-bar */
+        .nav-bar {
+            overflow: hidden;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Lottery Games</h2>
+        <div class="game-section">
+            <div class="game-title">Win Go</div>
+            <div class="game-description">Guess Number - Green/Red/Violet to win</div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <div class="nav-bar">
+        <div class="nav-button">
+            <button id="home">
+                Home
+                <span class="icon">🏠</span> <!-- Home icon -->
+            </button>
+        </div>
+        <div class="nav-button">
+            <button id="activity">
+                Activity
+                <span class="icon">📈</span> <!-- Activity icon -->
+            </button>
+        </div>
+        <div class="nav-button">
+            <button id="wallet">
+                Wallet
+                <span class="icon">💰</span> <!-- Wallet icon -->
+            </button>
+        </div>
+        <div class="nav-button">
+            <button id="account">
+                Account
+                <span class="icon">👤</span> <!-- Account icon -->
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Redirect to home page
+        document.getElementById('home').addEventListener('click', function() {
+            window.location.href = 'wingo(1).html'; // Replace 'home.html' with your actual home page URL
+        });
+    
+        // Redirect to activity page
+        document.getElementById('activity').addEventListener('click', function() {
+            window.location.href = 'activity.html'; // Replace with your actual activity page URL
+        });
+    
+        // Redirect to wallet page
+        document.getElementById('wallet').addEventListener('click', function() {
+            window.location.href = 'wallet(a).html'; // Replace with your actual wallet page URL
+        });
+    
+        // Redirect to account page
+        document.getElementById('account').addEventListener('click', function() {
+            window.location.href = 'account.html'; // Replace with your actual account page URL
+        });
+    </script>
+    
+</body>
+</html>

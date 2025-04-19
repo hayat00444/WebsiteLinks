@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff3e0; /* Light orange background */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Uplifted Balance card style */
+        .balance-card {
+            position: relative;
+            margin: 60px auto;
+            width: 70%; 
+            max-width: 450px;
+            height: 160px;
+            background-color: #b3e5fc; 
+            border-radius: 12px;
+            padding: 20px;
+            color: #0d47a1;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0px -5px 20px rgba(0, 0, 0, 0.2), 
+                        0px 10px 20px rgba(0, 0, 0, 0.2);
+            background-image: linear-gradient(145deg, #e3f2fd, #bbdefb);
+        }
+
+        .balance-label {
+            font-size: 18px;
+            margin: 0;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .balance-amount {
+            font-size: 32px;
+            color: #0d47a1;
+            margin-top: 30px;
+            text-align: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 60px;
+        }
+
+        .refresh-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            position: absolute;
+            right: 20px;
+            top: 70px;
+            margin-left: 10px;
+        }
+
+        .bind-bank-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .bind-bank-btn:hover {
+            background-color: #e65100;
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
+        }
+
+        .option {
+            text-align: center;
+            flex: 1;
+            margin: 0 15px;
+        }
+
+        .option button {
+            width: 100%;
+            max-width: 200px;
+            height: 60px;
+            padding: 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .option.deposit button {
+            background-color: #ff9800;
+            color: white;
+        }
+
+        .option.withdraw button {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        .option button:hover {
+            opacity: 0.9;
+        }
+
+        .history-section {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            background-color: #ffe0b2;
+            border-top-left-radius: 30px;
+            border-top-right-radius: 30px;
+        }
+
+        .history-option button {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .history-option.deposit-history button {
+            background-color: #f57c00;
+            color: white;
+        }
+
+        .history-option.withdraw-history button {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        .history-option button:hover {
+            opacity: 0.9;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-button:hover {
+            background-color: #e65100;
+        }
+
+        /* Modal for Bank Details */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #e3f2fd;
+            margin: 5% auto;
+            padding: 20px;
+            border: none;
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            background-image: linear-gradient(145deg, #bbdefb, #e1f5fe);
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #0d47a1;
+        }
+
+        .modal-input {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff3e0;
+            box-sizing: border-box;
+        }
+
+        .modal-submit {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .modal-submit:hover {
+            background-color: #45a049;
+        }
+
+        /* Additional Modal for Withdraw */
+        .withdraw-modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .withdraw-modal-content {
+            background-color: #e3f2fd;
+            margin: 5% auto;
+            padding: 20px;
+            border: none;
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            background-image: linear-gradient(145deg, #bbdefb, #e1f5fe);
+        }
+
+        .withdraw-modal-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #0d47a1;
+        }
+
+        .withdraw-modal-input {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff3e0;
+            box-sizing: border-box;
+        }
+
+        .withdraw-modal-select {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff3e0;
+            box-sizing: border-box;
+        }
+
+        .modal-back-button {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .modal-back-button:hover {
+            background-color: #e65100;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <button class="back-button" onclick="window.history.back();">Back</button>
+
+    <!-- Balance Card -->
+    <div class="balance-card">
+        <span class="balance-label">Balance</span>
+        <span class="balance-amount">₹0.00</span>
+        <button class="refresh-btn">♻️</button>
+        <button class="bind-bank-btn" onclick="openBankDetailsModal()">Bind Bank</button>
+    </div>
+
+    <div class="options">
+        <div class="option withdraw">
+            <button onclick="window.location.href='withdrawalbutton.html'">Withdraw</button>
+        </div>
+        
+        <div class="option deposit">
+            <button onclick="window.location.href='deposit.html'">Deposit</button>
+        </div>
+        
+    </div>
+
+    <!-- History Section -->
+    <div class="history-section">
+        <div class="history-option withdraw-history">
+            <button>Withdraw History</button>
+        </div>
+        <div class="history-option deposit-history">
+            <button>Deposit History</button>
+        </div>
+    </div>
+
+    <!-- Modal for Bank Details -->
+    <div id="bankDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Bind Bank</div>
+            <label for="bank-name">Bank Name:</label>
+            <input type="text" id="bank-name" class="modal-input">
+            <label for="account-number">Account Number:</label>
+            <input type="text" id="account-number" class="modal-input">
+            <label for="ifsc-code">IFSC Code:</label>
+            <input type="text" id="ifsc-code" class="modal-input">
+            <label for="holder-name">Account Holder Name:</label>
+            <input type="text" id="holder-name" class="modal-input">
+            <button class="modal-submit">Submit</button>
+            <button class="modal-back-button" onclick="closeBankDetailsModal()">Back</button> <!-- Back Button -->
+        </div>
+    </div>
+
+    <!-- Modal for Withdraw -->
+    <div id="withdrawModal" class="withdraw-modal">
+        <div class="withdraw-modal-content">
+            <div class="withdraw-modal-header">Withdraw Amount</div>
+            <label for="withdraw-amount">Enter Amount:</label>
+            <input type="text" id="withdraw-amount" class="withdraw-modal-input">
+            <label for="select-bank">Select Bank:</label>
+            <select id="select-bank" class="withdraw-modal-select">
+                <option value="Bank1">Bank 1</option>
+                <option value="Bank2">Bank 2</option>
+                <option value="Bank3">Bank 3</option>
+            </select>
+            <button class="modal-submit">Submit</button>
+            <button class="modal-back-button" onclick="closeWithdrawModal()">Back</button> <!-- Back Button -->
+        </div>
+    </div>
+    <div class="wallet-option deposit">
+        <button onclick="showDepositPage()">Deposit</button>
+    </div>
+
+    <!-- Script to open modals -->
+    <script>
+        function openModal() {
+            alert('Functionality not implemented yet.');
+        }
+
+        function openBankDetailsModal() {
+            var modal = document.getElementById('bankDetailsModal');
+            modal.style.display = 'block';
+        }
+
+        function closeBankDetailsModal() {
+            var modal = document.getElementById('bankDetailsModal');
+            modal.style.display = 'none';
+        }
+
+        function openWithdrawModal() {
+            var modal = document.getElementById('withdrawModal');
+            modal.style.display = 'block';
+        }
+
+        function closeWithdrawModal() {
+            var modal = document.getElementById('withdrawModal');
+            modal.style.display = 'none';
+        }
+        
+    {
+        function opendepsitmodal
+    }
+    </script>
+
+</body>
+</html>

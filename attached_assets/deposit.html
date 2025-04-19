@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deposit Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #e3f2fd, #ffe0b2); /* Light blue to light orange gradient */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Full height to center the container */
+        }
+
+        .container {
+            width: 400px;
+            background-color: #ffffff; /* White container background */
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-top: 8px solid #4caf50; /* Green top border */
+        }
+
+        .balance-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #e3f2fd; /* Light blue background */
+            border-radius: 12px;
+            padding: 20px;
+            color: #2e7d32; /* Dark green text */
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .balance-text {
+            font-size: 20px;
+        }
+
+        .refresh-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .refresh-icon {
+            width: 24px;
+            height: 24px;
+            filter: invert(35%) sepia(93%) saturate(311%) hue-rotate(75deg) brightness(94%) contrast(90%);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #2e7d32; /* Dark green for heading */
+            text-align: center;
+        }
+
+        .channels {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Two columns */
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .channel-btn,
+        .amount-btn,
+        .deposit-btn {
+            padding: 10px; /* Reduced padding */
+            background-color: #64b5f6; /* Light blue for buttons */
+            border-radius: 8px;
+            border: none;
+            color: #fff; /* White text */
+            font-size: 14px; /* Reduced font size */
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 3D effect */
+            outline: none; /* Remove outline */
+        }
+
+        .channel-btn:hover,
+        .amount-btn:hover,
+        .deposit-btn:hover {
+            background-color: #42a5f5; /* Darker blue on hover */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover for 3D effect */
+            transform: translateY(-2px); /* Lift effect */
+        }
+
+        .channel-btn.selected,
+        .amount-btn.selected {
+            background-color: #ff9800; /* Orange when selected */
+        }
+
+        .deposit-amount {
+            margin-bottom: 20px;
+        }
+
+        .deposit-amount h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #2e7d32; /* Dark green for amount heading */
+        }
+
+        .amount-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .custom-amount {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            border: 1px solid #64b5f6; /* Light blue border */
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #e3f2fd; /* Light blue background */
+        }
+
+        .custom-amount input {
+            flex: 1;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            outline: none;
+            border-radius: 6px; /* Rounded corners for input */
+        }
+
+        .deposit-btn {
+            width: 100%;
+            padding: 12px; /* Reduced padding */
+            background-color: #4caf50; /* Green for deposit button */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 3D effect */
+        }
+
+        .deposit-btn:hover {
+            background-color: #66bb6a; /* Lighter green on hover */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover for 3D effect */
+            transform: translateY(-2px); /* Lift effect */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="balance-card">
+            <span class="balance-text">Balance ₹1111.00</span>
+            <button class="refresh-btn">
+                <img src="path_to_refresh_icon.png" alt="Refresh" class="refresh-icon">
+            </button>
+        </div>
+
+        <div class="channels">
+            <button class="channel-btn" data-channel="UPI">UPI</button>
+            <button class="channel-btn" data-channel="Paytm">Paytm</button>
+            <button class="channel-btn" data-channel="PhonePe">PhonePe</button>
+        </div>
+
+        <div class="deposit-amount">
+            <h3>Deposit amount</h3>
+            <div class="amount-options">
+                <button class="amount-btn" data-amount="500">₹ 500</button>
+                <button class="amount-btn" data-amount="1000">₹ 1K</button>
+                <button class="amount-btn" data-amount="5000">₹ 5K</button>
+                <button class="amount-btn" data-amount="10000">₹ 10K</button>
+                <button class="amount-btn" data-amount="20000">₹ 20K</button>
+                <button class="amount-btn" data-amount="100000">₹ 100K</button>
+            </div>
+        </div>
+
+        <div class="custom-amount">
+            <input type="number" placeholder="Enter custom amount" id="customAmount">
+        </div>
+
+        <button class="deposit-btn">Deposit</button>
+    </div>
+
+    <script>
+        let selectedChannel = '';
+        let selectedAmount = '';
+
+        // Function to handle channel button selection
+        const channelButtons = document.querySelectorAll('.channel-btn');
+        channelButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                channelButtons.forEach(btn => btn.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedChannel = this.dataset.channel;
+            });
+        });
+
+        // Function to handle amount button selection
+        const amountButtons = document.querySelectorAll('.amount-btn');
+        amountButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                amountButtons.forEach(btn => btn.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedAmount = this.dataset.amount;
+
+                // Populate the custom amount input with the selected amount
+                document.getElementById('customAmount').value = selectedAmount;
+            });
+        });
+
+        // Redirect to the second page when the deposit button is clicked
+        const depositBtn = document.querySelector('.deposit-btn');
+        depositBtn.addEventListener('click', function() {
+    const customAmount = document.getElementById('customAmount').value;
+    if (selectedChannel && (selectedAmount || customAmount)) {
+        // You can also pass the selectedChannel and amount if needed
+        window.location.href = 'payment page.html';
+    } else {
+        alert('Please select a channel and an amount.');
+    }
+});
+
+    </script>
+</body>
+</html>
