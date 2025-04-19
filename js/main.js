@@ -83,11 +83,17 @@ function addBetToHistory(betDetails) {
 
 // Update user balance
 function updateBalance(amount) {
-    const currentBalance = parseFloat(localStorage.getItem('userBalance') || '0');
+    const currentBalance = parseFloat(localStorage.getItem('userBalance') || '1000');
     const newBalance = Math.max(0, currentBalance + amount);
     localStorage.setItem('userBalance', newBalance.toString());
     
-    // Update balance display if element exists on page
+    // Update all balance displays on the page
+    const balanceElements = document.querySelectorAll('.balance-amount, #balanceAmount');
+    balanceElements.forEach(element => {
+        if (element) {
+            element.textContent = newBalance.toLocaleString();
+        }
+    });
     const balanceElement = document.getElementById('balanceAmount') || document.getElementById('balance');
     if (balanceElement) {
         balanceElement.textContent = newBalance.toFixed(2);
