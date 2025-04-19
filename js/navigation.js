@@ -1,132 +1,105 @@
-// Optimize page navigation by preloading pages
+/**
+ * Optimized navigation system for the Goa Games platform
+ * Provides preloading, caching, and smooth transitions between pages
+ */
+
+// Cache for storing preloaded pages
+const pageCache = {};
+const PRELOAD_DELAY = 200; // Delay before preloading to prioritize current page load
+
+/**
+ * Preload multiple pages in the background
+ * @param {Array} pages - Array of page paths to preload
+ */
+function preloadPages(pages) {
+    // Use setTimeout to avoid blocking the main page load
+    setTimeout(() => {
+        pages.forEach(page => {
+            // Don't reload pages we've already cached
+            if (!pageCache[page]) {
+                // Create a fetch request to preload the page
+                fetch(page)
+                    .then(response => response.text())
+                    .then(html => {
+                        // Store the preloaded content in the cache
+                        pageCache[page] = html;
+                        console.log(`Preloaded: ${page}`);
+                    })
+                    .catch(error => {
+                        console.error(`Failed to preload ${page}:`, error);
+                    });
+            }
+        });
+    }, PRELOAD_DELAY);
+}
+
+/**
+ * Show the loading indicator before page navigation
+ */
+function showLoadingIndicator() {
+    const loader = document.getElementById('page-loader');
+    if (loader) {
+        loader.style.display = 'flex';
+    }
+}
+
+/**
+ * Hide the loading indicator
+ */
+function hideLoadingIndicator() {
+    const loader = document.getElementById('page-loader');
+    if (loader) {
+        loader.style.display = 'none';
+    }
+}
+
+/**
+ * Set up navigation event listeners for all navigation buttons
+ */
+function setupNavigationListeners() {
+    // Map navigation button IDs to their corresponding pages
+    const navMap = {
+        'home': 'index.html',
+        'activity': 'activity.html',
+        'wallet': 'wallet.html',
+        'account': 'account.html',
+        'wingo-game': 'wingo.html'
+    };
+
+    // Add optimized event listeners to all navigation buttons
+    Object.keys(navMap).forEach(buttonId => {
+        const button = document.getElementById(buttonId);
+        if (button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const destination = navMap[buttonId];
+                
+                // Show loading indicator
+                showLoadingIndicator();
+                
+                // Small delay to allow the loading indicator to appear
+                setTimeout(() => {
+                    window.location.href = destination;
+                }, 50);
+            });
+        }
+    });
+}
+
+// Initialize navigation system when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Preload commonly accessed pages
-    preloadPages(['index.html', 'wallet.html', 'activity.html', 'account.html', 'wingo.html']);
+    // List of pages to preload from the homepage
+    const pagesToPreload = [
+        'index.html',
+        'activity.html',
+        'wallet.html',
+        'account.html',
+        'wingo.html'
+    ];
     
-    // Set up navigation event listeners
+    // Preload pages in the background
+    preloadPages(pagesToPreload);
+    
+    // Set up the navigation event listeners
     setupNavigationListeners();
 });
-
-// Preload pages to improve navigation speed
-function preloadPages(pages) {
-    pages.forEach(page => {
-        const link = document.createElement('link');
-        link.rel = 'prefetch';
-        link.href = page;
-        document.head.appendChild(link);
-    });
-}
-
-// Set up optimized navigation
-function setupNavigationListeners() {
-    // Get all navigation buttons
-    const navButtons = document.querySelectorAll('.nav-button button');
-    
-    // Add click event listeners with performance optimization
-    navButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Show loading indicator
-            showLoadingIndicator();
-            
-            // Get the page to navigate to
-            const pageId = this.id;
-            let targetPage = '';
-            
-            switch(pageId) {
-                case 'home':
-                    targetPage = 'index.html';
-                    break;
-                case 'activity':
-                    targetPage = 'activity.html';
-                    break;
-                case 'wallet':
-                    targetPage = 'wallet.html';
-                    break;
-                case 'account':
-                    targetPage = 'account.html';
-                    break;
-                default:
-                    targetPage = 'index.html';
-            }
-            
-            // Navigate to the target page with a small delay to allow loading indicator to show
-            setTimeout(() => {
-                window.location.href = targetPage;
-            }, 50);
-        });
-    });
-    
-    // Additional navigation elements (game sections, etc.)
-    const gameSection = document.getElementById('wingo-game');
-    if (gameSection) {
-        gameSection.addEventListener('click', function() {
-            showLoadingIndicator();
-            setTimeout(() => {
-                window.location.href = 'wingo.html';
-            }, 50);
-        });
-    }
-    
-    // Back buttons with loading indicator
-    const backButtons = document.querySelectorAll('.back-button');
-    backButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            showLoadingIndicator();
-            setTimeout(() => {
-                if (this.getAttribute('data-target')) {
-                    window.location.href = this.getAttribute('data-target');
-                } else {
-                    window.history.back();
-                }
-            }, 50);
-        });
-    });
-}
-
-// Show loading indicator
-function showLoadingIndicator() {
-    // Create loading indicator if it doesn't exist
-    let loader = document.getElementById('page-loader');
-    if (!loader) {
-        loader = document.createElement('div');
-        loader.id = 'page-loader';
-        loader.innerHTML = '<div class="loader-spinner"></div>';
-        document.body.appendChild(loader);
-        
-        // Add CSS for loader
-        const style = document.createElement('style');
-        style.textContent = `
-            #page-loader {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(255, 255, 255, 0.7);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 9999;
-            }
-            .loader-spinner {
-                width: 40px;
-                height: 40px;
-                border: 4px solid #f3f3f3;
-                border-top: 4px solid #1565c0;
-                border-radius: 50%;
-                animation: spin 1s linear infinite;
-            }
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-        `;
-        document.head.appendChild(style);
-    }
-    
-    // Show the loader
-    loader.style.display = 'flex';
-}

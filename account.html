@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <!-- Critical CSS for fastest loading -->
+    <link rel="stylesheet" href="css/critical.css">
+    <!-- Defer non-critical CSS -->
+    <link rel="stylesheet" href="css/styles.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="css/styles.css"></noscript>
+    <!-- Preload the navigation script for faster page transitions -->
+    <link rel="preload" href="js/navigation.js" as="script">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -245,7 +251,14 @@
         </div>
     </div>
 
+    <!-- Loading indicator -->
+    <div id="page-loader" style="display: none;">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <!-- Core JavaScript -->
     <script src="js/main.js"></script>
+    <script src="js/navigation.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Generate a random user ID if not already stored
@@ -258,53 +271,59 @@
             // Display user information
             document.getElementById('user-id').textContent = 'ID: ' + userId;
             
-            // Menu item click handlers
-            document.getElementById('personal-info').addEventListener('click', function() {
-                alert('Personal Information feature coming soon!');
-            });
+            // Setup optimized menu click handlers
+            setupMenuHandlers();
+        });
+        
+        function setupMenuHandlers() {
+            // Menu item click handlers with optimized navigation
+            const menuItems = {
+                'personal-info': function() {
+                    alert('Personal Information feature coming soon!');
+                },
+                'bank-accounts': function() {
+                    showLoadingIndicator();
+                    setTimeout(() => {
+                        window.location.href = 'wallet.html';
+                    }, 50);
+                },
+                'security': function() {
+                    alert('Security settings feature coming soon!');
+                },
+                'customer-support': function() {
+                    alert('Customer Support: support@goagames.com');
+                },
+                'about': function() {
+                    alert('Goa Games - The best gaming platform for casual gamers!');
+                },
+                'terms': function() {
+                    alert('Terms & Conditions will be displayed here.');
+                }
+            };
             
-            document.getElementById('bank-accounts').addEventListener('click', function() {
-                window.location.href = 'wallet.html';
-            });
-            
-            document.getElementById('security').addEventListener('click', function() {
-                alert('Security settings feature coming soon!');
-            });
-            
-            document.getElementById('customer-support').addEventListener('click', function() {
-                alert('Customer Support: support@goagames.com');
-            });
-            
-            document.getElementById('about').addEventListener('click', function() {
-                alert('Goa Games - The best gaming platform for casual gamers!');
-            });
-            
-            document.getElementById('terms').addEventListener('click', function() {
-                alert('Terms & Conditions will be displayed here.');
-            });
-            
-            // Logout button
-            document.getElementById('logout-btn').addEventListener('click', function() {
-                if (confirm('Are you sure you want to logout?')) {
-                    alert('You have been logged out.');
-                    // In a real app, this would clear session data
-                    window.location.href = 'index.html';
+            // Apply all event handlers efficiently
+            Object.keys(menuItems).forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('click', menuItems[id]);
                 }
             });
             
-            // Navigation
-            document.getElementById('home').addEventListener('click', function() {
-                window.location.href = 'index.html';
-            });
-            
-            document.getElementById('activity').addEventListener('click', function() {
-                window.location.href = 'activity.html';
-            });
-            
-            document.getElementById('wallet').addEventListener('click', function() {
-                window.location.href = 'wallet.html';
-            });
-        });
+            // Logout button with optimized navigation
+            const logoutBtn = document.getElementById('logout-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to logout?')) {
+                        alert('You have been logged out.');
+                        // In a real app, this would clear session data
+                        showLoadingIndicator();
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 50);
+                    }
+                });
+            }
+        }
     </script>
 </body>
 </html>

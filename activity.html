@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Activity</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <!-- Critical CSS for fastest loading -->
+    <link rel="stylesheet" href="css/critical.css">
+    <!-- Defer non-critical CSS -->
+    <link rel="stylesheet" href="css/styles.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="css/styles.css"></noscript>
+    <!-- Preload the navigation script for faster page transitions -->
+    <link rel="preload" href="js/navigation.js" as="script">
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -221,7 +227,14 @@
         </div>
     </div>
 
+    <!-- Loading indicator -->
+    <div id="page-loader" style="display: none;">
+        <div class="loader-spinner"></div>
+    </div>
+    
+    <!-- Core JavaScript -->
     <script src="js/main.js"></script>
+    <script src="js/navigation.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Get references to elements
@@ -229,35 +242,77 @@
             const emptyState = document.getElementById('empty-state');
             const tabButtons = document.querySelectorAll('.tab-button');
             
-            // Sample data - in a real app, this would come from localStorage or an API
-            const activities = [
-                {
+            // Load activities data from localStorage
+            let activities = [];
+            
+            // Try to get real activity data
+            const betHistory = JSON.parse(localStorage.getItem('betHistory') || '[]');
+            const depositHistory = JSON.parse(localStorage.getItem('depositHistory') || '[]');
+            const withdrawalHistory = JSON.parse(localStorage.getItem('withdrawalHistory') || '[]');
+            
+            // Combine all activities from different sources
+            betHistory.forEach(bet => {
+                activities.push({
                     type: 'bet',
                     title: 'Wingo Bet',
-                    date: '2023-07-15T14:30:00',
-                    amount: 500,
-                    result: 'win' // win or loss
-                },
-                {
-                    type: 'bet',
-                    title: 'Wingo Bet',
-                    date: '2023-07-15T13:00:00',
-                    amount: 200,
-                    result: 'loss'
-                },
-                {
+                    date: bet.date || new Date().toISOString(),
+                    amount: bet.amount || 0,
+                    result: bet.status === '✅' ? 'win' : 'loss'
+                });
+            });
+            
+            depositHistory.forEach(deposit => {
+                activities.push({
                     type: 'deposit',
-                    title: 'UPI Deposit',
-                    date: '2023-07-14T10:15:00',
-                    amount: 1000
-                },
-                {
+                    title: 'Deposit',
+                    date: deposit.date || new Date().toISOString(),
+                    amount: deposit.amount || 0
+                });
+            });
+            
+            withdrawalHistory.forEach(withdrawal => {
+                activities.push({
                     type: 'withdraw',
-                    title: 'Bank Withdrawal',
-                    date: '2023-07-13T16:45:00',
-                    amount: 1500
-                }
-            ];
+                    title: 'Withdrawal',
+                    date: withdrawal.date || new Date().toISOString(),
+                    amount: withdrawal.amount || 0
+                });
+            });
+            
+            // If no activities found, use sample data
+            if (activities.length === 0) {
+                activities = [
+                    {
+                        type: 'bet',
+                        title: 'Wingo Bet',
+                        date: '2023-07-15T14:30:00',
+                        amount: 500,
+                        result: 'win'
+                    },
+                    {
+                        type: 'bet',
+                        title: 'Wingo Bet',
+                        date: '2023-07-15T13:00:00',
+                        amount: 200,
+                        result: 'loss'
+                    },
+                    {
+                        type: 'deposit',
+                        title: 'UPI Deposit',
+                        date: '2023-07-14T10:15:00',
+                        amount: 1000
+                    },
+                    {
+                        type: 'withdraw',
+                        title: 'Bank Withdrawal',
+                        date: '2023-07-13T16:45:00',
+                        amount: 1500
+                    }
+                ];
+            }
+            
+            // Sort activities by date (newest first)
+            activities.sort((a, b) => new Date(b.date) - new Date(a.date));
             
             // Function to format date
             function formatDate(dateString) {
@@ -292,7 +347,9 @@
                     return;
                 }
                 
-                // Display activities
+                // Display activities with optimized DOM operations
+                const fragment = document.createDocumentFragment();
+                
                 filteredActivities.forEach(activity => {
                     let amountClass = '';
                     let amountPrefix = '';
@@ -323,36 +380,30 @@
                         <div class="activity-amount ${amountClass}">${amountPrefix}₹${activity.amount}</div>
                     `;
                     
-                    activityContent.appendChild(activityItem);
+                    fragment.appendChild(activityItem);
                 });
+                
+                activityContent.appendChild(fragment);
             }
             
             // Initial display
             displayActivities();
             
-            // Tab switching
+            // Tab switching with optimized performance
             tabButtons.forEach(button => {
                 button.addEventListener('click', function() {
+                    // Don't re-render if already on selected tab
+                    if (this.classList.contains('active')) return;
+                    
                     // Update active tab
                     tabButtons.forEach(btn => btn.classList.remove('active'));
                     this.classList.add('active');
                     
                     // Display activities based on selected tab
-                    displayActivities(this.dataset.tab);
+                    requestAnimationFrame(() => {
+                        displayActivities(this.dataset.tab);
+                    });
                 });
-            });
-            
-            // Navigation
-            document.getElementById('home').addEventListener('click', function() {
-                window.location.href = 'index.html';
-            });
-            
-            document.getElementById('wallet').addEventListener('click', function() {
-                window.location.href = 'wallet.html';
-            });
-            
-            document.getElementById('account').addEventListener('click', function() {
-                window.location.href = 'account.html';
             });
         });
     </script>
