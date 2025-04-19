@@ -84,7 +84,7 @@ function addBetToHistory(betDetails) {
 // Update user balance
 function updateBalance(amount) {
     const currentBalance = parseFloat(localStorage.getItem('userBalance') || '0');
-    const newBalance = currentBalance + amount;
+    const newBalance = Math.max(0, currentBalance + amount);
     localStorage.setItem('userBalance', newBalance.toString());
     
     // Update balance display if element exists on page

@@ -653,17 +653,20 @@ function processPayoutAction(payoutId, action) {
     
     if (withdrawalIndex !== -1) {
         const withdrawal = withdrawalHistory[withdrawalIndex];
+        const currentBalance = parseFloat(localStorage.getItem('userBalance') || '0');
         
         if (action === 'approved') {
             withdrawal.status = 'Completed';
-            // Update user balance for rejected withdrawal
-            const currentBalance = parseFloat(localStorage.getItem('userBalance') || '0');
-            localStorage.setItem('userBalance', (currentBalance - withdrawal.amount).toString());
+            // Only deduct if not already deducted
+            if (withdrawal.balanceUpdated !== true) {
+                localStorage.setItem('userBalance', (currentBalance - withdrawal.amount).toString());
+                withdrawal.balanceUpdated = true;
+            }
         } else {
             withdrawal.status = 'Rejected';
-            // Refund the amount for rejected withdrawal
-            const currentBalance = parseFloat(localStorage.getItem('userBalance') || '0');
+            // Return the funds to user balance
             localStorage.setItem('userBalance', (currentBalance + withdrawal.amount).toString());
+            withdrawal.balanceUpdated = false;
         }
         
         // Update withdrawal history
