@@ -652,8 +652,22 @@ function processPayoutAction(payoutId, action) {
     const withdrawalIndex = withdrawalHistory.findIndex(w => w.id === payoutId);
     
     if (withdrawalIndex !== -1) {
-        // Update withdrawal status
-        withdrawalHistory[withdrawalIndex].status = action === 'approved' ? 'Completed' : 'Rejected';
+        const withdrawal = withdrawalHistory[withdrawalIndex];
+        
+        if (action === 'approved') {
+            withdrawal.status = 'Completed';
+            // Update user balance for rejected withdrawal
+            const currentBalance = parseFloat(localStorage.getItem('userBalance') || '0');
+            localStorage.setItem('userBalance', (currentBalance - withdrawal.amount).toString());
+        } else {
+            withdrawal.status = 'Rejected';
+            // Refund the amount for rejected withdrawal
+            const currentBalance = parseFloat(localStorage.getItem('userBalance') || '0');
+            localStorage.setItem('userBalance', (currentBalance + withdrawal.amount).toString());
+        }
+        
+        // Update withdrawal history
+        withdrawalHistory[withdrawalIndex] = withdrawal;
         localStorage.setItem('withdrawalHistory', JSON.stringify(withdrawalHistory));
     }
     

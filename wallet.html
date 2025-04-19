@@ -347,11 +347,19 @@
 
     <!-- History Section -->
     <div class="history-section">
-        <div class="history-option withdraw-history">
-            <button id="withdrawHistoryBtn">Withdraw History</button>
-        </div>
-        <div class="history-option deposit-history">
-            <button id="depositHistoryBtn">Deposit History</button>
+        <div id="historyContent" style="width: 100%; padding: 20px;">
+            <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <thead>
+                    <tr>
+                        <th style="padding: 10px; text-align: left; border-bottom: 2px solid #ddd;">Type</th>
+                        <th style="padding: 10px; text-align: left; border-bottom: 2px solid #ddd;">Amount</th>
+                        <th style="padding: 10px; text-align: left; border-bottom: 2px solid #ddd;">Date</th>
+                        <th style="padding: 10px; text-align: left; border-bottom: 2px solid #ddd;">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionHistory">
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -474,12 +482,35 @@
                 });
             }
 
-            const depositHistoryBtn = document.getElementById('depositHistoryBtn');
-            if (depositHistoryBtn) {
-                depositHistoryBtn.addEventListener('click', function() {
-                    alert('Deposit History feature coming soon!');
-                });
+            // Load transaction history
+            function loadTransactionHistory() {
+                const transactionHistory = document.getElementById('transactionHistory');
+                const withdrawals = JSON.parse(localStorage.getItem('withdrawalHistory') || '[]');
+                const deposits = JSON.parse(localStorage.getItem('depositHistory') || '[]');
+                
+                // Combine and sort transactions
+                const allTransactions = [...withdrawals.map(w => ({...w, type: 'Withdrawal'})), 
+                                      ...deposits.map(d => ({...d, type: 'Deposit'}))]
+                    .sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                transactionHistory.innerHTML = allTransactions.map(transaction => `
+                    <tr>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">${transaction.type}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">₹${transaction.amount}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">${new Date(transaction.date).toLocaleString()}</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">${transaction.status}</td>
+                    </tr>
+                `).join('');
             }
+            
+            // Load history when page loads
+            loadTransactionHistory();
+            
+            // Refresh history when balance updates
+            document.getElementById('refreshBalance').addEventListener('click', function() {
+                updateBalanceFromStorage();
+                loadTransactionHistory();
+            });
 
             // Add optimized navigation for wallet option buttons
             const withdrawBtn = document.querySelector('.option.withdraw button');
