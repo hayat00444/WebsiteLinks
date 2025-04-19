@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdrawal Page</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #e3f2fd, #bbdefb); /* Light blue gradient */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Full height to center the container */
+        }
+
+        .container {
+            width: 400px;
+            background-color: #ffffff; /* White container background */
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-top: 8px solid #2196f3; /* Blue top border */
+        }
+
+        .balance-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #e3f2fd; /* Light blue background */
+            border-radius: 12px;
+            padding: 20px;
+            color: #0d47a1; /* Dark blue text */
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .balance-text {
+            font-size: 20px;
+        }
+
+        .refresh-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #0d47a1; /* Dark blue for heading */
+            text-align: center;
+        }
+
+        .bank-selection {
+            margin-bottom: 20px;
+        }
+
+        .bank-selection h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #0d47a1; /* Dark blue for section heading */
+        }
+
+        .bank-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #64b5f6;
+            border-radius: 8px;
+            background-color: #e3f2fd;
+            font-size: 16px;
+            color: #0d47a1;
+            outline: none;
+        }
+
+        .withdrawal-amount {
+            margin-bottom: 20px;
+        }
+
+        .withdrawal-amount h3 {
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: #0d47a1;
+        }
+
+        .amount-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .amount-btn {
+            padding: 10px;
+            background-color: #64b5f6;
+            border-radius: 8px;
+            border: none;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .amount-btn:hover {
+            background-color: #42a5f5;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .amount-btn.selected {
+            background-color: #ff9800;
+        }
+
+        .custom-amount {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            border: 1px solid #64b5f6;
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #e3f2fd;
+        }
+
+        .custom-amount input {
+            flex: 1;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            outline: none;
+            border-radius: 6px;
+            background-color: white;
+        }
+
+        .withdraw-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+
+        .withdraw-btn:hover {
+            background-color: #1e88e5;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .back-button:hover {
+            background-color: #e65100;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .no-bank-message {
+            text-align: center;
+            color: #f44336;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .bind-bank-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
+            display: none;
+        }
+
+        .bind-bank-btn:hover {
+            background-color: #f57c00;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.location.href = 'wallet.html';">Back</button>
+
+    <div class="container">
+        <div class="balance-card">
+            <span class="balance-text">Balance ₹<span id="balanceAmount">0.00</span></span>
+            <button class="refresh-btn" id="refreshBalance">♻️</button>
+        </div>
+
+        <h2>Withdraw Funds</h2>
+
+        <div class="no-bank-message" id="noBankMessage">
+            No bank account found. Please bind a bank account first.
+        </div>
+        
+        <div class="bank-selection" id="bankSelectionSection">
+            <h3>Select Bank Account</h3>
+            <select class="bank-select" id="bankSelect">
+                <option value="">Select a bank account</option>
+            </select>
+        </div>
+
+        <div class="withdrawal-amount">
+            <h3>Withdrawal amount</h3>
+            <div class="amount-options">
+                <button class="amount-btn" data-amount="500">₹ 500</button>
+                <button class="amount-btn" data-amount="1000">₹ 1K</button>
+                <button class="amount-btn" data-amount="5000">₹ 5K</button>
+                <button class="amount-btn" data-amount="10000">₹ 10K</button>
+                <button class="amount-btn" data-amount="20000">₹ 20K</button>
+                <button class="amount-btn" data-amount="50000">₹ 50K</button>
+            </div>
+        </div>
+
+        <div class="custom-amount">
+            <input type="number" placeholder="Enter custom amount" id="customAmount">
+        </div>
+
+        <button class="withdraw-btn" id="withdrawBtn">Withdraw</button>
+        <button class="bind-bank-btn" id="bindBankBtn" onclick="window.location.href = 'wallet.html';">Bind Bank Account</button>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        let selectedAmount = '';
+
+        // Function to retrieve and update balance from localStorage
+        function updateBalanceFromStorage() {
+            const storedBalance = localStorage.getItem('userBalance');
+            if (storedBalance) {
+                document.getElementById('balanceAmount').textContent = parseFloat(storedBalance).toFixed(2);
+            }
+        }
+
+        // Update balance when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            updateBalanceFromStorage();
+            loadBankDetails();
+        });
+
+        // Refresh balance button
+        document.getElementById('refreshBalance').addEventListener('click', function() {
+            updateBalanceFromStorage();
+            // Visual feedback for refresh
+            this.style.transform = 'rotate(360deg)';
+            setTimeout(() => {
+                this.style.transform = 'rotate(0deg)';
+            }, 500);
+        });
+
+        // Load bank details from localStorage
+        function loadBankDetails() {
+            const bankDetails = JSON.parse(localStorage.getItem('bankDetails'));
+            const bankSelect = document.getElementById('bankSelect');
+            const noBankMessage = document.getElementById('noBankMessage');
+            const bankSelectionSection = document.getElementById('bankSelectionSection');
+            const bindBankBtn = document.getElementById('bindBankBtn');
+            const withdrawBtn = document.getElementById('withdrawBtn');
+
+            if (bankDetails) {
+                // Create an option for the saved bank
+                const option = document.createElement('option');
+                option.value = 'savedBank';
+                option.textContent = `${bankDetails.bankName} - ${bankDetails.accountNumber.substring(bankDetails.accountNumber.length - 4)}`;
+                bankSelect.appendChild(option);
+                bankSelect.value = 'savedBank';
+                
+                // Show bank selection, hide no bank message
+                noBankMessage.style.display = 'none';
+                bankSelectionSection.style.display = 'block';
+                bindBankBtn.style.display = 'none';
+                withdrawBtn.style.display = 'block';
+            } else {
+                // No bank found, show message and bind bank button
+                noBankMessage.style.display = 'block';
+                bankSelectionSection.style.display = 'none';
+                bindBankBtn.style.display = 'block';
+                withdrawBtn.style.display = 'none';
+            }
+        }
+
+        // Function to handle amount button selection
+        const amountButtons = document.querySelectorAll('.amount-btn');
+        amountButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                amountButtons.forEach(btn => btn.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedAmount = this.dataset.amount;
+
+                // Populate the custom amount input with the selected amount
+                document.getElementById('customAmount').value = selectedAmount;
+            });
+        });
+
+        // Handle withdrawal request
+        document.getElementById('withdrawBtn').addEventListener('click', function() {
+            const customAmount = document.getElementById('customAmount').value;
+            const selectedBank = document.getElementById('bankSelect').value;
+            
+            if (!selectedBank) {
+                alert('Please select a bank account.');
+                return;
+            }
+            
+            if (!customAmount && !selectedAmount) {
+                alert('Please select or enter an amount.');
+                return;
+            }
+            
+            const withdrawAmount = parseFloat(customAmount || selectedAmount);
+            const currentBalance = parseFloat(localStorage.getItem('userBalance') || 0);
+            
+            if (withdrawAmount > currentBalance) {
+                alert('Insufficient balance for this withdrawal.');
+                return;
+            }
+            
+            // Process withdrawal (in a real app, this would connect to a backend)
+            const newBalance = currentBalance - withdrawAmount;
+            localStorage.setItem('userBalance', newBalance.toString());
+            
+            // Save withdrawal history
+            const withdrawalHistory = JSON.parse(localStorage.getItem('withdrawalHistory') || '[]');
+            withdrawalHistory.push({
+                amount: withdrawAmount,
+                date: new Date().toISOString(),
+                status: 'Pending'
+            });
+            localStorage.setItem('withdrawalHistory', JSON.stringify(withdrawalHistory));
+            
+            alert(`Withdrawal of ₹${withdrawAmount} initiated. It will be processed shortly.`);
+            updateBalanceFromStorage();
+        });
+    </script>
+</body>
+</html>

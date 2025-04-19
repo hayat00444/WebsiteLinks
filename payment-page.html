@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #e3f2fd, #ffe0b2);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 400px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-top: 8px solid #4caf50;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #2e7d32;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .payment-info {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .payment-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .payment-label {
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .payment-value {
+            color: #212121;
+        }
+
+        .qr-code-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+        }
+
+        .qr-code-placeholder {
+            width: 200px;
+            height: 200px;
+            background-color: #e0e0e0;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #757575;
+        }
+
+        .upi-id {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .instructions {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #fff8e1;
+            border-radius: 10px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .instructions h3 {
+            color: #ff8f00;
+            margin-top: 0;
+            font-size: 18px;
+        }
+
+        .instructions ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+            color: #424242;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .confirm-btn {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .cancel-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
+
+        .back-button:hover {
+            background-color: #e65100;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.location.href = 'deposit.html';">Back</button>
+
+    <div class="container">
+        <div class="header">
+            <h2>Complete Your Payment</h2>
+            <p>Please follow the instructions below to complete your payment</p>
+        </div>
+
+        <div class="payment-info">
+            <div class="payment-row">
+                <span class="payment-label">Amount:</span>
+                <span class="payment-value" id="paymentAmount">₹0.00</span>
+            </div>
+            <div class="payment-row">
+                <span class="payment-label">Payment Method:</span>
+                <span class="payment-value" id="paymentMethod">UPI</span>
+            </div>
+            <div class="payment-row">
+                <span class="payment-label">Reference ID:</span>
+                <span class="payment-value" id="referenceId">PAY123456789</span>
+            </div>
+        </div>
+
+        <div class="qr-code-container">
+            <div class="qr-code-placeholder">QR Code for payment will be displayed here</div>
+            <div class="upi-id" id="upiId">goa_games@ybl</div>
+        </div>
+
+        <div class="instructions">
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Open your UPI app (GPay, Paytm, PhonePe, etc.)</li>
+                <li>Scan the QR code OR pay to the UPI ID shown above</li>
+                <li>Enter the EXACT amount shown</li>
+                <li>Use the Reference ID as description/note</li>
+                <li>Once payment is complete, click "I've Paid"</li>
+            </ol>
+        </div>
+
+        <div class="buttons">
+            <button class="button confirm-btn" id="confirmPaymentBtn">I've Paid</button>
+            <button class="button cancel-btn" id="cancelPaymentBtn">Cancel</button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Get deposit details from localStorage
+        document.addEventListener('DOMContentLoaded', function() {
+            const depositDetails = JSON.parse(localStorage.getItem('depositDetails') || '{}');
+            const amount = depositDetails.amount || 0;
+            const channel = depositDetails.channel || 'UPI';
+            
+            // Generate a random reference ID
+            const referenceId = 'PAY' + Math.floor(Math.random() * 1000000000);
+            
+            // Update the payment information on the page
+            document.getElementById('paymentAmount').textContent = '₹' + amount;
+            document.getElementById('paymentMethod').textContent = channel;
+            document.getElementById('referenceId').textContent = referenceId;
+            
+            // Set UPI ID based on payment method
+            const upiIdElement = document.getElementById('upiId');
+            if (channel === 'UPI') {
+                upiIdElement.textContent = 'goa_games@upi';
+            } else if (channel === 'Paytm') {
+                upiIdElement.textContent = 'goa_games@paytm';
+            } else if (channel === 'PhonePe') {
+                upiIdElement.textContent = 'goa_games@ybl';
+            }
+        });
+
+        // Handle confirm payment button click
+        document.getElementById('confirmPaymentBtn').addEventListener('click', function() {
+            const depositDetails = JSON.parse(localStorage.getItem('depositDetails') || '{}');
+            const amount = parseFloat(depositDetails.amount || 0);
+            
+            // In a real app, this would verify the payment with a backend
+            // For now, we'll simulate adding the amount to the user's balance
+            const currentBalance = parseFloat(localStorage.getItem('userBalance') || 0);
+            const newBalance = currentBalance + amount;
+            localStorage.setItem('userBalance', newBalance.toString());
+            
+            // Save deposit history
+            const depositHistory = JSON.parse(localStorage.getItem('depositHistory') || '[]');
+            depositHistory.push({
+                amount: amount,
+                date: new Date().toISOString(),
+                status: 'Completed'
+            });
+            localStorage.setItem('depositHistory', JSON.stringify(depositHistory));
+            
+            alert('Payment confirmed! Your balance has been updated.');
+            window.location.href = 'wallet.html';
+        });
+
+        // Handle cancel payment button click
+        document.getElementById('cancelPaymentBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to cancel this payment?')) {
+                window.location.href = 'deposit.html';
+            }
+        });
+    </script>
+</body>
+</html>

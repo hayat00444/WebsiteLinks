@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wingo 30sec</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5efe4; /* Light brown background */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Back button styling - reduced size */
+    .back-button {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 6px 12px; /* Reduced padding for smaller size */
+      background-color: #d9a764; /* Match the theme */
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px; /* Reduced font size */
+      z-index: 100;
+    }
+    .back-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .game-container {
+      background-color: #fff5e1; /* Golden background */
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 350px;
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    h1 {
+      color: #8b4513; /* Brown text */
+      margin-bottom: 15px;
+    }
+    .timer {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #8b4513;
+    }
+    .balance {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #8b4513;
+    }
+    .color-options {
+      display: flex; /* Arrange color buttons horizontally */
+      justify-content: center; /* Center the buttons */
+      margin-bottom: 10px;
+      gap: 15px; /* Space between buttons */
+    }
+    .color-options button {
+      padding: 15px;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* 3D shadow effect */
+      transition: all 0.2s ease;
+      border-radius: 50%; /* Make buttons round */
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Center text in button */
+      color: white;
+      text-align: center; /* Center text */
+    }
+    .color-options button:hover {
+      transform: translateY(-4px); /* Hover effect for 3D look */
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4); /* Increased shadow on hover */
+    }
+    /* Color button styles */
+    .green {
+      background-color: #65d26e; /* Light green */
+    }
+    .red {
+      background-color: #f27979; /* Light red */
+    }
+    .violet {
+      background-color: #ba8dff; /* Light violet */
+    }
+    /* Number button styles */
+    .number-options {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr); /* Five columns */
+      gap: 10px; /* Spacing between buttons */
+      margin-bottom: 10px;
+    }
+    .number-options button {
+      border-radius: 50%; /* Perfectly round */
+      width: 60px;
+      height: 60px;
+      font-size: 20px;
+      border: none;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* 3D shadow effect */
+      transition: all 0.2s ease;
+    }
+    .number-0, .number-5 {
+      background-color: #ba8dff; /* Violet for 0 and 5 */
+      color: white;
+    }
+    .number-1, .number-3, .number-7, .number-9 {
+      background-color: #65d26e; /* Green for 1, 3, 7, and 9 */
+      color: white;
+    }
+    .number-2, .number-4, .number-6, .number-8 {
+      background-color: #f27979; /* Red for 2, 4, 6, and 8 */
+      color: white;
+    }
+    .number-options button:hover {
+      transform: translateY(-4px); /* Hover effect for 3D look */
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4); /* Increased shadow on hover */
+    }
+    /* Betting buttons */
+    .betting-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 10px;
+    }
+    .betting-buttons button {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* 3D shadow effect */
+      transition: all 0.2s ease;
+    }
+    .betting-buttons button:hover {
+      transform: translateY(-4px); /* Hover effect for 3D look */
+      box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4); /* Increased shadow on hover */
+    }
+    .big {
+      background-color: #d9a764; /* Golden for Big */
+      color: white;
+    }
+    .small {
+      background-color: #ff7766; /* Light red for Small */
+      color: white;
+    }
+    /* Toggle buttons for Results/Bet History */
+    .toggle-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 15px;
+    }
+    .toggle-buttons button {
+      padding: 10px 20px;
+      background-color: #d9a764; /* Matching theme */
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+    /* Results and Bet History containers */
+    .results, .bet-records {
+      display: none; /* Initially hidden */
+      margin-top: 20px;
+      text-align: left; /* Align records/results to the left */
+      width: 100%;
+    }
+    .results h3, .bet-records h3 {
+      color: #8b4513; /* Brown text */
+    }
+    .result-item, .bet-record-item {
+      background-color: #ffe5b4; /* Light golden background */
+      padding: 5px;
+      margin: 3px 0;
+      border-radius: 5px;
+      border: 1px solid #d9a764; /* Match theme */
+      display: flex; /* Flexbox for better alignment */
+      justify-content: space-between; /* Space between items */
+      font-size: 14px;
+    }
+    .bet-status {
+      font-size: 16px;
+    }
+    .result-display {
+      margin-top: 20px;
+      font-size: 24px;
+      color: #8b4513;
+    }
+    /* Bet dialog styling */
+    .bet-dialog {
+      display: none; /* Initially hidden */
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff5e1; /* Same as game container */
+      padding: 20px;
+      border: 1px solid #d9a764;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+      text-align: center; /* Center content */
+    }
+    .bet-dialog h2 {
+      font-size: 16px; /* Reduced font size */
+      margin-bottom: 10px; /* Margin below heading */
+    }
+    .bet-dialog input {
+      width: 80px;
+      padding: 5px;
+      margin: 5px 0; /* Margin around input */
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .bet-dialog button {
+      background-color: #d9a764; /* Matching theme */
+      color: white;
+      border: none;
+      padding: 10px 16px; /* Larger padding for Confirm */
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px; /* Margin for buttons */
+    }
+    .bet-dialog button#confirmBet {
+      font-size: 16px; /* Larger font size for Confirm */
+      padding: 10px 20px; /* Larger padding for Confirm */
+    }
+    .bet-dialog button#cancelBet {
+      font-size: 14px; /* Smaller font size for Cancel */
+      padding: 8px 16px; /* Smaller padding for Cancel */
+    }
+    .bet-dialog button:hover {
+      transform: translateY(-2px); /* Hover effect for 3D look */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4); /* Increased shadow on hover */
+    }
+    
+    /* Overlay styling */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Back button to go to the homepage -->
+  <button class="back-button" onclick="window.location.href = 'index.html';">Back</button>
+
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Bet dialog -->
+  <div class="bet-dialog" id="betDialog">
+    <h2>Enter Bet Amount</h2>
+    <input type="number" id="betAmount" placeholder="Enter amount" min="1" />
+    <div>
+      <button id="confirmBet">Confirm</button>
+      <button id="cancelBet">Cancel</button>
+    </div>
+  </div>
+
+  <div class="game-container">
+    <h1>Wingo 30sec</h1>
+
+    <!-- Timer -->
+    <div class="timer">
+      Time remaining: <span id="timer">00:30</span>
+    </div>
+
+    <!-- Balance Display -->
+    <div class="balance">
+      Balance: ₹<span id="balance">1000</span>
+    </div>
+
+    <!-- Color selection -->
+    <div class="color-options">
+      <button class="green" data-color="green">Green</button>
+      <button class="violet" data-color="violet">Violet</button>
+      <button class="red" data-color="red">Red</button>
+    </div>
+
+    <!-- Number selection -->
+    <div class="number-options">
+      <button class="number-0" data-number="0">0</button>
+      <button class="number-1" data-number="1">1</button>
+      <button class="number-2" data-number="2">2</button>
+      <button class="number-3" data-number="3">3</button>
+      <button class="number-4" data-number="4">4</button>
+      <button class="number-5" data-number="5">5</button>
+      <button class="number-6" data-number="6">6</button>
+      <button class="number-7" data-number="7">7</button>
+      <button class="number-8" data-number="8">8</button>
+      <button class="number-9" data-number="9">9</button>
+    </div>
+
+    <!-- Big / Small Betting Buttons -->
+    <div class="betting-buttons">
+      <button class="big" data-size="big">Big</button>
+      <button class="small" data-size="small">Small</button>
+    </div>
+
+    <!-- Toggle buttons for Last Results and Betting History -->
+    <div class="toggle-buttons">
+      <button id="showResults">Last Results</button>
+      <button id="showBetHistory">Betting History</button>
+    </div>
+
+    <!-- Last Results section -->
+    <div class="results" id="lastResultsSection">
+      <h3>Last Results</h3>
+      <div id="lastResults"></div>
+    </div>
+
+    <!-- Betting History section -->
+    <div class="bet-records" id="betRecordsSection">
+      <h3>Betting History</h3>
+      <div id="betRecords"></div>
+    </div>
+
+    <!-- Result display -->
+    <div class="result-display" id="resultDisplay"></div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    let balance = 1000; // Starting balance
+    let timeRemaining = 30; // Countdown timer set to 30 seconds
+    let interval;
+    let bets = []; // Store all bets in an array
+    let results = [];
+    let betDetails = {}; // Track the type and value of the bet
+
+    const timerEl = document.getElementById("timer");
+    const balanceEl = document.getElementById("balance");
+    const betDialog = document.getElementById("betDialog");
+    const overlay = document.getElementById("overlay");
+    const lastResultsEl = document.getElementById("lastResults");
+    const betRecordsEl = document.getElementById("betRecords");
+    const resultDisplay = document.getElementById("resultDisplay");
+    const lastResultsSection = document.getElementById("lastResultsSection");
+    const betRecordsSection = document.getElementById("betRecordsSection");
+
+    // Initialize the timer when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      startTimer();
+    });
+
+    // Toggle between showing results and bet history
+    document.getElementById("showResults").addEventListener("click", () => {
+      lastResultsSection.style.display = "block";
+      betRecordsSection.style.display = "none";
+    });
+
+    document.getElementById("showBetHistory").addEventListener("click", () => {
+      lastResultsSection.style.display = "none";
+      betRecordsSection.style.display = "block";
+    });
+
+    // Countdown timer logic
+    function startTimer() {
+      interval = setInterval(() => {
+        if (timeRemaining > 0) {
+          timeRemaining--;
+          timerEl.innerText = `00:${timeRemaining < 10 ? '0' + timeRemaining : timeRemaining}`;
+        } else {
+          clearInterval(interval);
+          showResults();
+          setTimeout(() => {
+            timeRemaining = 30;
+            timerEl.innerText = `00:${timeRemaining < 10 ? '0' + timeRemaining : timeRemaining}`;
+            startTimer();
+          }, 3000);
+        }
+      }, 1000);
+    }
+
+    // Random number generation for results
+    function getRandomResult() {
+      const number = Math.floor(Math.random() * 10); // Random number between 0-9
+      let color = '';
+      let size = '';
+
+      if (number === 0 || number === 5) {
+        color = 'violet';
+      } else if ([2, 4, 6, 8].includes(number)) {
+        color = 'red';
+      } else {
+        color = 'green';
+      }
+
+      size = (number >= 5) ? 'big' : 'small'; // Classify as big or small
+      return { number, color, size };
+    }
+
+    // Show results at the end of the round
+    function showResults() {
+      const result = getRandomResult();
+      results.push(result);
+      updateResults();
+
+      const icon = result.color === 'red' ? '🔴' : result.color === 'green' ? '🟢' : '🟣';
+      resultDisplay.innerHTML = `Result: ${result.number} ${icon} ${result.size.toUpperCase()}`;
+
+      // Update betting history with win/loss status
+      bets.forEach(bet => {
+        if ((bet.color && bet.color === result.color) || 
+            (bet.number && bet.number == result.number) || 
+            (bet.size && bet.size === result.size)) {
+          bet.status = '✅'; // Win
+          balance += parseInt(bet.amount) * 2; // Double the betting amount as winnings
+        } else {
+          bet.status = '❌'; // Loss
+        }
+      });
+      balanceEl.innerText = balance; // Update the displayed balance
+      updateBetRecords();
+    }
+
+    // Update the results display
+    function updateResults() {
+      lastResultsEl.innerHTML = "";
+      const lastFiveResults = results.slice(-5).reverse(); // Get last 5 results
+      
+      lastFiveResults.forEach(result => {
+        const icon = result.color === 'red' ? '🔴' : result.color === 'green' ? '🟢' : '🟣';
+        const resultItem = document.createElement("div");
+        resultItem.classList.add("result-item");
+        resultItem.innerHTML = `
+          <span>Round: ${results.indexOf(result) + 1}</span>
+          <span>${result.number} ${icon} ${result.size}</span>
+        `;
+        lastResultsEl.appendChild(resultItem);
+      });
+    }
+
+    // Update bet records
+    function updateBetRecords() {
+      betRecordsEl.innerHTML = "";
+      const lastFiveBets = bets.slice(-5).reverse(); // Get last 5 bets
+      
+      lastFiveBets.forEach(bet => {
+        const betItem = document.createElement("div");
+        betItem.classList.add("bet-record-item");
+        
+        let betType = "";
+        if (bet.color) betType = `Color: ${bet.color}`;
+        else if (bet.number) betType = `Number: ${bet.number}`;
+        else if (bet.size) betType = `Size: ${bet.size}`;
+        
+        betItem.innerHTML = `
+          <span>${betType}</span>
+          <span>₹${bet.amount}</span>
+          <span class="bet-status">${bet.status || 'Pending'}</span>
+        `;
+        betRecordsEl.appendChild(betItem);
+      });
+    }
+
+    // Event listeners for all betting buttons
+    document.querySelectorAll('.color-options button, .number-options button, .betting-buttons button').forEach(button => {
+      button.addEventListener('click', function() {
+        // Store bet details based on button clicked
+        betDetails = {};
+        
+        if (this.dataset.color) {
+          betDetails.color = this.dataset.color;
+        } else if (this.dataset.number) {
+          betDetails.number = this.dataset.number;
+        } else if (this.dataset.size) {
+          betDetails.size = this.dataset.size;
+        }
+        
+        // Show the bet dialog
+        betDialog.style.display = "block";
+        overlay.style.display = "block";
+        document.getElementById("betAmount").focus();
+      });
+    });
+
+    // Confirm bet
+    document.getElementById("confirmBet").addEventListener("click", function() {
+      const betAmount = parseInt(document.getElementById("betAmount").value);
+      
+      if (isNaN(betAmount) || betAmount <= 0) {
+        alert("Please enter a valid bet amount.");
+        return;
+      }
+      
+      if (betAmount > balance) {
+        alert("Insufficient balance!");
+        return;
+      }
+      
+      // Deduct bet amount from balance
+      balance -= betAmount;
+      balanceEl.innerText = balance;
+      
+      // Create a new bet with the details and amount
+      const newBet = {
+        ...betDetails,
+        amount: betAmount,
+        timestamp: new Date().toLocaleTimeString()
+      };
+      
+      bets.push(newBet);
+      updateBetRecords();
+      
+      // Close the bet dialog
+      betDialog.style.display = "none";
+      overlay.style.display = "none";
+      document.getElementById("betAmount").value = "";
+    });
+
+    // Cancel bet
+    document.getElementById("cancelBet").addEventListener("click", function() {
+      betDialog.style.display = "none";
+      overlay.style.display = "none";
+      document.getElementById("betAmount").value = "";
+    });
+  </script>
+</body>
+</html>
