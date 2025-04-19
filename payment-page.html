@@ -210,13 +210,25 @@
         </div>
 
         <div class="buttons">
-            <button class="button confirm-btn" id="confirmPaymentBtn">I've Paid</button>
+            <div class="form-group">
+                <label for="utr">Enter UTR/Transaction ID</label>
+                <input type="text" id="utr" class="form-control" required>
+            </div>
+            <button class="button confirm-btn" id="confirmPaymentBtn">Submit Payment</button>
             <button class="button cancel-btn" id="cancelPaymentBtn">Cancel</button>
         </div>
     </div>
 
     <script src="js/main.js"></script>
     <script>
+        function generateOrderId() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let orderId = '';
+            for(let i = 0; i < 10; i++) {
+                orderId += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return orderId;
+        }
         // Get deposit details from localStorage
         document.addEventListener('DOMContentLoaded', function() {
             const depositDetails = JSON.parse(localStorage.getItem('depositDetails') || '{}');
@@ -244,25 +256,28 @@
 
         // Handle confirm payment button click
         document.getElementById('confirmPaymentBtn').addEventListener('click', function() {
+            const utr = document.getElementById('utr').value;
+            if (!utr) {
+                alert('Please enter UTR/Transaction ID');
+                return;
+            }
+
             const depositDetails = JSON.parse(localStorage.getItem('depositDetails') || '{}');
             const amount = parseFloat(depositDetails.amount || 0);
+            const orderId = generateOrderId();
             
-            // In a real app, this would verify the payment with a backend
-            // For now, we'll simulate adding the amount to the user's balance
-            const currentBalance = parseFloat(localStorage.getItem('userBalance') || 0);
-            const newBalance = currentBalance + amount;
-            localStorage.setItem('userBalance', newBalance.toString());
-            
-            // Save deposit history
+            // Save deposit history with pending status
             const depositHistory = JSON.parse(localStorage.getItem('depositHistory') || '[]');
             depositHistory.push({
+                orderId: orderId,
                 amount: amount,
                 date: new Date().toISOString(),
-                status: 'Completed'
+                status: 'Pending',
+                utr: utr
             });
             localStorage.setItem('depositHistory', JSON.stringify(depositHistory));
             
-            alert('Payment confirmed! Your balance has been updated.');
+            alert('Payment submitted for approval. Order ID: ' + orderId);
             window.location.href = 'wallet.html';
         });
 
