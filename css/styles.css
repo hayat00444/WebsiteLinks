@@ -57,8 +57,9 @@ button {
 }
 
 .btn-primary {
-    background-color: #1565c0;
+    background-color: #6b2fba;
     color: white;
+    box-shadow: 0 4px 8px rgba(147, 112, 219, 0.3);
 }
 
 .btn-secondary {
@@ -84,11 +85,12 @@ button {
 
 /* Card Styles */
 .card {
-    background-color: #fff;
+    background-color: #2d1b4d;
     border-radius: 0.5rem;
     padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(147, 112, 219, 0.2);
     margin-bottom: 1.5rem;
+    border: 1px solid rgba(147, 112, 219, 0.1);
 }
 
 /* Form Styles */
