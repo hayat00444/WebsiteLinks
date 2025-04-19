@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .admin-name {
+            font-size: 16px;
+        }
+
+        .admin-dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+        }
+
+        .sidebar {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-menu-item {
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar-menu-item.active {
+            background-color: #e3f2fd;
+            color: #1565c0;
+            font-weight: bold;
+        }
+
+        .sidebar-menu-item:hover:not(.active) {
+            background-color: #f5f5f5;
+        }
+
+        .sidebar-menu-icon {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .main-content {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #bbdefb, #e3f2fd);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #1565c0;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .data-table th {
+            background-color: #e3f2fd;
+            color: #1565c0;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .data-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-active {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-pending {
+            background-color: #fff8e1;
+            color: #f57c00;
+        }
+
+        .status-inactive {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #1565c0;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #c62828;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+            transform: translateY(-2px);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .edit-btn {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .search-bar button {
+            padding: 10px 15px;
+            background-color: #1565c0;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        /* Login form and authentication styles */
+        .admin-login {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-login h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #1565c0;
+        }
+
+        .error-message {
+            color: #f44336;
+            background-color: #ffebee;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        /* Pagination controls */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            padding: 8px 12px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            background-color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .pagination button.active {
+            background-color: #1565c0;
+            color: white;
+            border-color: #1565c0;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1565c0;
+        }
+
+        .modal-close {
+            font-size: 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Login Form - Initially visible -->
+    <div class="admin-login" id="admin-login">
+        <h2>Admin Login</h2>
+        <div class="error-message" id="login-error">Invalid username or password</div>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+        </form>
+    </div>
+
+    <!-- Admin Dashboard - Initially hidden -->
+    <div class="container" id="admin-dashboard" style="display: none;">
+        <header>
+            <h1>GOA Games Admin Panel</h1>
+            <div class="admin-name">Welcome, <span id="admin-username">Admin</span></div>
+        </header>
+
+        <div class="admin-dashboard">
+            <div class="sidebar">
+                <ul class="sidebar-menu">
+                    <li class="sidebar-menu-item active" data-section="dashboard">
+                        <span class="sidebar-menu-icon">📊</span> Dashboard
+                    </li>
+                    <li class="sidebar-menu-item" data-section="users">
+                        <span class="sidebar-menu-icon">👥</span> Users
+                    </li>
+                    <li class="sidebar-menu-item" data-section="games">
+                        <span class="sidebar-menu-icon">🎮</span> Games
+                    </li>
+                    <li class="sidebar-menu-item" data-section="transactions">
+                        <span class="sidebar-menu-icon">💰</span> Transactions
+                    </li>
+                    <li class="sidebar-menu-item" data-section="payouts">
+                        <span class="sidebar-menu-icon">💸</span> Payouts
+                    </li>
+                    <li class="sidebar-menu-item" data-section="settings">
+                        <span class="sidebar-menu-icon">⚙️</span> Settings
+                    </li>
+                    <li class="sidebar-menu-item" id="logout-btn">
+                        <span class="sidebar-menu-icon">🚪</span> Logout
+                    </li>
+                </ul>
+            </div>
+
+            <div class="main-content">
+                <!-- Dashboard Section -->
+                <div class="content-section active" id="dashboard-section">
+                    <h2>Dashboard Overview</h2>
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-users">0</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-bets">0</div>
+                            <div class="stat-label">Total Bets</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-deposits">₹0</div>
+                            <div class="stat-label">Total Deposits</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-withdrawals">₹0</div>
+                            <div class="stat-label">Total Withdrawals</div>
+                        </div>
+                    </div>
+
+                    <h3>Recent Activities</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Activity</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activity-table-body">
+                            <!-- Sample data - will be dynamically populated -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Users Section -->
+                <div class="content-section" id="users-section">
+                    <h2>User Management</h2>
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search users..." id="user-search">
+                        <button>Search</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Name</th>
+                                <th>Balance</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <!-- Sample data - will be dynamically populated -->
+                        </tbody>
+                    </table>
+                    <div class="pagination" id="users-pagination">
+                        <button>1</button>
+                        <button>2</button>
+                        <button>3</button>
+                    </div>
+                </div>
+
+                <!-- Games Section -->
+                <div class="content-section" id="games-section">
+                    <h2>Game Management</h2>
+                    <div class="dashboard-stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-games">1</div>
+                            <div class="stat-label">Active Games</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="game-win-rate">50%</div>
+                            <div class="stat-label">Win Rate</div>
+                        </div>
+                    </div>
+
+                    <h3>Game Settings</h3>
+                    <div class="form-group">
+                        <label for="wingo-multiplier">Wingo Win Multiplier</label>
+                        <input type="number" id="wingo-multiplier" class="form-control" value="2">
+                    </div>
+                    <div class="form-group">
+                        <label for="wingo-timer">Wingo Round Time (seconds)</label>
+                        <input type="number" id="wingo-timer" class="form-control" value="30">
+                    </div>
+                    <button class="btn btn-primary" id="save-game-settings">Save Settings</button>
+                </div>
+
+                <!-- Transactions Section -->
+                <div class="content-section" id="transactions-section">
+                    <h2>Transaction History</h2>
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search transactions..." id="transaction-search">
+                        <button>Search</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>User</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-table-body">
+                            <!-- Sample data - will be dynamically populated -->
+                        </tbody>
+                    </table>
+                    <div class="pagination" id="transactions-pagination">
+                        <button>1</button>
+                        <button>2</button>
+                        <button>3</button>
+                    </div>
+                </div>
+
+                <!-- Payouts Section -->
+                <div class="content-section" id="payouts-section">
+                    <h2>Pending Payouts</h2>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Payout ID</th>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>Bank Details</th>
+                                <th>Date Requested</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payouts-table-body">
+                            <!-- Sample data - will be dynamically populated -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Settings Section -->
+                <div class="content-section" id="settings-section">
+                    <h2>Admin Settings</h2>
+                    <div class="form-group">
+                        <label for="site-title">Site Title</label>
+                        <input type="text" id="site-title" class="form-control" value="Goa Games">
+                    </div>
+                    <div class="form-group">
+                        <label for="min-deposit">Minimum Deposit (₹)</label>
+                        <input type="number" id="min-deposit" class="form-control" value="500">
+                    </div>
+                    <div class="form-group">
+                        <label for="min-withdrawal">Minimum Withdrawal (₹)</label>
+                        <input type="number" id="min-withdrawal" class="form-control" value="1000">
+                    </div>
+                    <div class="form-group">
+                        <label for="maintenance-mode">Maintenance Mode</label>
+                        <select id="maintenance-mode" class="form-control">
+                            <option value="0">Off</option>
+                            <option value="1">On</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" id="save-settings">Save Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Edit Modal -->
+    <div class="modal" id="user-edit-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Edit User</div>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="user-edit-form">
+                <div class="form-group">
+                    <label for="edit-user-id">User ID</label>
+                    <input type="text" id="edit-user-id" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="edit-user-name">Name</label>
+                    <input type="text" id="edit-user-name" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="edit-user-balance">Balance (₹)</label>
+                    <input type="number" id="edit-user-balance" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="edit-user-status">Status</label>
+                    <select id="edit-user-status" class="form-control">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="suspended">Suspended</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="cancel-user-edit">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Payout Approval Modal -->
+    <div class="modal" id="payout-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Process Payout</div>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>Payout ID</label>
+                <div id="payout-id" style="padding: 10px; background-color: #f5f5f5; border-radius: 4px;"></div>
+            </div>
+            <div class="form-group">
+                <label>User</label>
+                <div id="payout-user" style="padding: 10px; background-color: #f5f5f5; border-radius: 4px;"></div>
+            </div>
+            <div class="form-group">
+                <label>Amount</label>
+                <div id="payout-amount" style="padding: 10px; background-color: #f5f5f5; border-radius: 4px;"></div>
+            </div>
+            <div class="form-group">
+                <label>Bank Details</label>
+                <div id="payout-bank" style="padding: 10px; background-color: #f5f5f5; border-radius: 4px;"></div>
+            </div>
+            <div class="form-group">
+                <label for="payout-notes">Notes</label>
+                <textarea id="payout-notes" class="form-control" rows="3" placeholder="Enter any notes about this transaction"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="reject-payout">Reject</button>
+                <button type="button" class="btn btn-primary" id="approve-payout">Approve</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

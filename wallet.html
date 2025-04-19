@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wallet</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <!-- Critical CSS for fastest loading -->
+    <link rel="stylesheet" href="css/critical.css">
+    <!-- Defer non-critical CSS -->
+    <link rel="stylesheet" href="css/styles.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="css/styles.css"></noscript>
+    <!-- Preload the navigation script for faster page transitions -->
+    <link rel="preload" href="js/navigation.js" as="script">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -394,7 +400,14 @@
         </div>
     </div>
 
+    <!-- Loading indicator -->
+    <div id="page-loader" style="display: none;">
+        <div class="loader-spinner"></div>
+    </div>
+    
+    <!-- Core JavaScript -->
     <script src="js/main.js"></script>
+    <script src="js/navigation.js"></script>
     <script>
         // Function to retrieve and update balance from localStorage
         function updateBalanceFromStorage() {
@@ -405,17 +418,92 @@
         }
 
         // Update balance when page loads
-        document.addEventListener('DOMContentLoaded', updateBalanceFromStorage);
-
-        // Refresh balance
-        document.getElementById('refreshBalance').addEventListener('click', function() {
+        document.addEventListener('DOMContentLoaded', function() {
             updateBalanceFromStorage();
-            // Visual feedback for refresh
-            this.style.transform = 'rotate(360deg)';
-            setTimeout(() => {
-                this.style.transform = 'rotate(0deg)';
-            }, 500);
+            setupOptimizedEvents();
         });
+
+        // Set up optimized event handlers
+        function setupOptimizedEvents() {
+            // Refresh balance with visual feedback
+            const refreshBtn = document.getElementById('refreshBalance');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', function() {
+                    updateBalanceFromStorage();
+                    // Visual feedback for refresh
+                    this.style.transform = 'rotate(360deg)';
+                    setTimeout(() => {
+                        this.style.transform = 'rotate(0deg)';
+                    }, 500);
+                });
+            }
+
+            // Submit bank details
+            const submitBankBtn = document.getElementById('submitBankDetails');
+            if (submitBankBtn) {
+                submitBankBtn.addEventListener('click', function() {
+                    const bankName = document.getElementById('bank-name').value;
+                    const accountNumber = document.getElementById('account-number').value;
+                    const ifscCode = document.getElementById('ifsc-code').value;
+                    const holderName = document.getElementById('holder-name').value;
+
+                    if (!bankName || !accountNumber || !ifscCode || !holderName) {
+                        alert('Please fill in all fields');
+                        return;
+                    }
+
+                    // Save bank details to localStorage
+                    const bankDetails = {
+                        bankName,
+                        accountNumber,
+                        ifscCode,
+                        holderName
+                    };
+                    localStorage.setItem('bankDetails', JSON.stringify(bankDetails));
+                    
+                    alert('Bank details saved successfully!');
+                    closeBankDetailsModal();
+                });
+            }
+
+            // Handle history button clicks
+            const withdrawHistoryBtn = document.getElementById('withdrawHistoryBtn');
+            if (withdrawHistoryBtn) {
+                withdrawHistoryBtn.addEventListener('click', function() {
+                    alert('Withdraw History feature coming soon!');
+                });
+            }
+
+            const depositHistoryBtn = document.getElementById('depositHistoryBtn');
+            if (depositHistoryBtn) {
+                depositHistoryBtn.addEventListener('click', function() {
+                    alert('Deposit History feature coming soon!');
+                });
+            }
+
+            // Add optimized navigation for wallet option buttons
+            const withdrawBtn = document.querySelector('.option.withdraw button');
+            if (withdrawBtn) {
+                withdrawBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showLoadingIndicator();
+                    setTimeout(() => {
+                        window.location.href = 'withdrawal.html';
+                    }, 50);
+                });
+            }
+
+            const depositBtn = document.querySelector('.option.deposit button');
+            if (depositBtn) {
+                depositBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showLoadingIndicator();
+                    setTimeout(() => {
+                        window.location.href = 'deposit.html';
+                    }, 50);
+                });
+            }
+        }
 
         function openBankDetailsModal() {
             document.getElementById('bankDetailsModal').style.display = 'block';
@@ -424,58 +512,6 @@
         function closeBankDetailsModal() {
             document.getElementById('bankDetailsModal').style.display = 'none';
         }
-
-        // Submit bank details
-        document.getElementById('submitBankDetails').addEventListener('click', function() {
-            const bankName = document.getElementById('bank-name').value;
-            const accountNumber = document.getElementById('account-number').value;
-            const ifscCode = document.getElementById('ifsc-code').value;
-            const holderName = document.getElementById('holder-name').value;
-
-            if (!bankName || !accountNumber || !ifscCode || !holderName) {
-                alert('Please fill in all fields');
-                return;
-            }
-
-            // Save bank details to localStorage
-            const bankDetails = {
-                bankName,
-                accountNumber,
-                ifscCode,
-                holderName
-            };
-            localStorage.setItem('bankDetails', JSON.stringify(bankDetails));
-            
-            alert('Bank details saved successfully!');
-            closeBankDetailsModal();
-        });
-
-        // Handle withdraw history button click
-        document.getElementById('withdrawHistoryBtn').addEventListener('click', function() {
-            alert('Withdraw History feature coming soon!');
-        });
-
-        // Handle deposit history button click
-        document.getElementById('depositHistoryBtn').addEventListener('click', function() {
-            alert('Deposit History feature coming soon!');
-        });
-
-        // Navigation
-        document.getElementById('home').addEventListener('click', function() {
-            window.location.href = 'index.html';
-        });
-        
-        document.getElementById('activity').addEventListener('click', function() {
-            window.location.href = 'activity.html';
-        });
-        
-        document.getElementById('wallet').addEventListener('click', function() {
-            window.location.href = 'wallet.html';
-        });
-        
-        document.getElementById('account').addEventListener('click', function() {
-            window.location.href = 'account.html';
-        });
     </script>
 </body>
 </html>

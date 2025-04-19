@@ -4,7 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wingo 30sec</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <!-- Critical CSS for fastest loading -->
+  <link rel="stylesheet" href="css/critical.css">
+  <!-- Defer non-critical CSS -->
+  <link rel="stylesheet" href="css/styles.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="css/styles.css"></noscript>
+  <!-- Preload the navigation script for faster page transitions -->
+  <link rel="preload" href="js/navigation.js" as="script">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -336,7 +342,14 @@
     <div class="result-display" id="resultDisplay"></div>
   </div>
 
+  <!-- Loading indicator -->
+  <div id="page-loader" style="display: none;">
+    <div class="loader-spinner"></div>
+  </div>
+  
+  <!-- Core JavaScript -->
   <script src="js/main.js"></script>
+  <script src="js/navigation.js"></script>
   <script>
     let balance = 1000; // Starting balance
     let timeRemaining = 30; // Countdown timer set to 30 seconds
