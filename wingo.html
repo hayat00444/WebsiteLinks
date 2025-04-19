@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +12,7 @@
             font-family: Arial, sans-serif;
             background-color: #1a1240;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             color: white;
         }
 
@@ -21,78 +22,50 @@
             text-align: center;
         }
 
-        h1 {
-            font-size: 24px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
         .balance-card {
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .balance-text {
-            font-size: 18px;
-            color: white;
-        }
-
-        .balance-amount {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        .deposit-btn {
-            background-color: #4169E1;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .timer-circle {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: conic-gradient(#4169E1 0%, transparent 100%);
-            margin: 30px auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 15px;
+            margin-bottom: 20px;
             position: relative;
         }
 
-        .timer-inner {
-            font-size: 32px;
-            color: white;
+        .timer-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 20px;
         }
 
-        .timer-text {
-            font-size: 14px;
-            margin-top: 5px;
+        .balance-text {
+            font-size: 16px;
+            color: white;
+            text-align: left;
+        }
+
+        .balance-amount {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: left;
         }
 
         .color-options {
-            display: flex;
-            justify-content: space-between;
-            margin: 30px 0;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 15px 0;
         }
 
         .color-btn {
-            flex: 1;
-            padding: 15px;
+            padding: 12px 8px;
             border: none;
-            border-radius: 12px;
+            border-radius: 8px;
             color: white;
-            font-size: 18px;
+            font-size: 14px;
             cursor: pointer;
         }
 
@@ -103,31 +76,31 @@
         .numbers-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin: 20px 0;
+            gap: 8px;
+            margin: 15px 0;
         }
 
         .number-btn {
             aspect-ratio: 1;
             border: none;
-            border-radius: 12px;
-            font-size: 24px;
+            border-radius: 8px;
+            font-size: 18px;
             color: white;
             cursor: pointer;
         }
 
         .size-options {
-            display: flex;
-            gap: 10px;
-            margin: 20px 0;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin: 15px 0;
         }
 
         .size-btn {
-            flex: 1;
-            padding: 15px;
+            padding: 12px 8px;
             border: none;
-            border-radius: 12px;
-            font-size: 18px;
+            border-radius: 8px;
+            font-size: 14px;
             cursor: pointer;
         }
 
@@ -140,132 +113,293 @@
             background-color: #3B82F6;
             color: white;
         }
+
+        .history-tabs {
+            display: flex;
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            background: #4169E1;
+        }
+
+        .history-content {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+        }
+
+        .bet-dialog {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #2d1b4d;
+            padding: 20px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 300px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+        }
+
+        .bet-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .dialog-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .dialog-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .confirm-btn {
+            background: #4169E1;
+            color: white;
+        }
+
+        .cancel-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>✨ Wingo 30sec ✨</h1>
-
         <div class="balance-card">
             <div>
                 <div class="balance-text">Balance</div>
                 <div class="balance-amount">₹<span id="balanceAmount">1,000</span></div>
             </div>
-            <button class="deposit-btn" onclick="window.location.href='deposit.html'">Deposit</button>
-        </div>
-
-        <div class="timer-circle">
-            <div class="timer-inner">
-                <div id="timer">23</div>
-                <div class="timer-text">seconds</div>
+            <div class="timer-container">
+                <span id="timer">30</span>s
             </div>
         </div>
 
-        <div>
-            <h3>Colors</h3>
-            <div class="color-options">
-                <button class="color-btn green" data-color="green">Green</button>
-                <button class="color-btn violet" data-color="violet">Violet</button>
-                <button class="color-btn red" data-color="red">Red</button>
-            </div>
+        <div class="color-options">
+            <button class="color-btn green" data-color="green">Green</button>
+            <button class="color-btn violet" data-color="violet">Violet</button>
+            <button class="color-btn red" data-color="red">Red</button>
         </div>
 
-        <div>
-            <h3>Numbers</h3>
-            <div class="numbers-grid">
-                <button class="number-btn" style="background-color: #8B5CF6;">0</button>
-                <button class="number-btn" style="background-color: #34D399;">1</button>
-                <button class="number-btn" style="background-color: #F87171;">2</button>
-                <button class="number-btn" style="background-color: #34D399;">3</button>
-                <button class="number-btn" style="background-color: #F87171;">4</button>
-                <button class="number-btn" style="background-color: #8B5CF6;">5</button>
-                <button class="number-btn" style="background-color: #F87171;">6</button>
-                <button class="number-btn" style="background-color: #34D399;">7</button>
-                <button class="number-btn" style="background-color: #F87171;">8</button>
-                <button class="number-btn" style="background-color: #34D399;">9</button>
-            </div>
+        <div class="numbers-grid">
+            <button class="number-btn" style="background-color: #8B5CF6;">0</button>
+            <button class="number-btn" style="background-color: #34D399;">1</button>
+            <button class="number-btn" style="background-color: #F87171;">2</button>
+            <button class="number-btn" style="background-color: #34D399;">3</button>
+            <button class="number-btn" style="background-color: #F87171;">4</button>
+            <button class="number-btn" style="background-color: #8B5CF6;">5</button>
+            <button class="number-btn" style="background-color: #F87171;">6</button>
+            <button class="number-btn" style="background-color: #34D399;">7</button>
+            <button class="number-btn" style="background-color: #F87171;">8</button>
+            <button class="number-btn" style="background-color: #34D399;">9</button>
         </div>
 
-        <div>
-            <h3>Size</h3>
-            <div class="size-options">
-                <button class="size-btn big-btn">↑ Big (5-9)</button>
-                <button class="size-btn small-btn">↓ Small (0-4)</button>
-            </div>
+        <div class="size-options">
+            <button class="size-btn big-btn">↑ Big (5-9)</button>
+            <button class="size-btn small-btn">↓ Small (0-4)</button>
+        </div>
+
+        <div class="history-tabs">
+            <button class="tab-btn active" data-tab="results">Results</button>
+            <button class="tab-btn" data-tab="bets">My Bets</button>
+        </div>
+
+        <div id="resultsHistory" class="history-content">
+            <!-- Results will be populated here -->
+        </div>
+
+        <div id="betsHistory" class="history-content" style="display: none;">
+            <!-- Bets will be populated here -->
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="bet-dialog" id="betDialog">
+        <h3>Place Bet</h3>
+        <input type="number" class="bet-input" id="betAmount" placeholder="Enter amount">
+        <div class="dialog-buttons">
+            <button class="dialog-btn confirm-btn" id="confirmBet">Confirm</button>
+            <button class="dialog-btn cancel-btn" id="cancelBet">Cancel</button>
         </div>
     </div>
 
     <script src="js/main.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize balance from localStorage
-            updateBalanceDisplay();
-            startTimer();
-            setupGameEvents();
-        });
-
-        function updateBalanceDisplay() {
-            const balance = localStorage.getItem('userBalance') || '1000';
-            document.getElementById('balanceAmount').textContent = parseFloat(balance).toLocaleString();
+        let currentPeriod = generatePeriodNumber();
+        let balance = 1000;
+        let timeRemaining = 30;
+        let currentBet = null;
+        
+        function generatePeriodNumber() {
+            const date = new Date();
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const sequence = String(Math.floor(Math.random() * 999999)).padStart(6, '0');
+            return `${year}${month}${day}${sequence}`;
         }
 
-        function startTimer() {
-            let timeLeft = 30;
-            const timerElement = document.getElementById('timer');
-            const timerCircle = document.querySelector('.timer-circle');
-
-            const interval = setInterval(() => {
-                timeLeft--;
-                if (timeLeft < 0) {
-                    timeLeft = 30;
-                    showResult();
-                }
-                timerElement.textContent = timeLeft;
-                const progress = (timeLeft / 30) * 100;
-                timerCircle.style.background = `conic-gradient(#4169E1 ${progress}%, transparent ${progress}%)`;
-            }, 1000);
-        }
-
-        function setupGameEvents() {
-            const buttons = document.querySelectorAll('.color-btn, .number-btn, .size-btn');
-            buttons.forEach(button => {
-                button.addEventListener('click', handleBet);
-            });
-        }
-
-        function handleBet(e) {
-            const betAmount = prompt('Enter bet amount:');
-            if (!betAmount) return;
-
-            const amount = parseFloat(betAmount);
-            const currentBalance = parseFloat(localStorage.getItem('userBalance') || '1000');
-
-            if (amount > currentBalance) {
-                alert('Insufficient balance!');
-                return;
+        function updateTimer() {
+            document.getElementById('timer').textContent = timeRemaining;
+            if (timeRemaining === 0) {
+                timeRemaining = 30;
+                currentPeriod = generatePeriodNumber();
+                showResult();
+            } else {
+                timeRemaining--;
             }
+        }
 
-            // Update balance
-            localStorage.setItem('userBalance', (currentBalance - amount).toString());
-            updateBalanceDisplay();
+        function showBetDialog(type, value) {
+            currentBet = { type, value };
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('betDialog').style.display = 'block';
+        }
 
-            // Save bet to history
-            const betHistory = JSON.parse(localStorage.getItem('betHistory') || '[]');
-            betHistory.push({
-                type: e.target.textContent,
+        function closeBetDialog() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('betDialog').style.display = 'none';
+            document.getElementById('betAmount').value = '';
+        }
+
+        function placeBet(amount) {
+            const bet = {
+                period: currentPeriod,
+                type: currentBet.type,
+                value: currentBet.value,
                 amount: amount,
-                date: new Date().toISOString(),
-                status: 'Pending'
-            });
-            localStorage.setItem('betHistory', JSON.stringify(betHistory));
+                timestamp: new Date().toISOString()
+            };
+
+            const bets = JSON.parse(localStorage.getItem('bets') || '[]');
+            bets.push(bet);
+            localStorage.setItem('bets', JSON.stringify(bets));
+            
+            balance -= amount;
+            document.getElementById('balanceAmount').textContent = balance.toLocaleString();
+            updateBetsHistory();
         }
 
         function showResult() {
-            // Implement result logic here
-            const result = Math.floor(Math.random() * 10);
-            alert(`Result: ${result}`);
-            // Update bet results and balance here
+            const result = {
+                period: currentPeriod,
+                number: Math.floor(Math.random() * 10),
+                timestamp: new Date().toISOString()
+            };
+
+            const results = JSON.parse(localStorage.getItem('results') || '[]');
+            results.unshift(result);
+            localStorage.setItem('results', JSON.stringify(results));
+            
+            updateResultsHistory();
+            // Here you would also process bets and update balances
         }
+
+        function updateResultsHistory() {
+            const results = JSON.parse(localStorage.getItem('results') || '[]');
+            const container = document.getElementById('resultsHistory');
+            container.innerHTML = results.slice(0, 10).map(result => `
+                <div class="history-item">
+                    <span>Period: ${result.period}</span>
+                    <span>Number: ${result.number}</span>
+                </div>
+            `).join('');
+        }
+
+        function updateBetsHistory() {
+            const bets = JSON.parse(localStorage.getItem('bets') || '[]');
+            const container = document.getElementById('betsHistory');
+            container.innerHTML = bets.slice(0, 10).map(bet => `
+                <div class="history-item">
+                    <span>${bet.type}: ${bet.value}</span>
+                    <span>₹${bet.amount}</span>
+                </div>
+            `).join('');
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.color-btn, .number-btn, .size-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const type = button.classList.contains('color-btn') ? 'color' :
+                           button.classList.contains('number-btn') ? 'number' : 'size';
+                const value = button.getAttribute('data-color') || button.textContent.trim();
+                showBetDialog(type, value);
+            });
+        });
+
+        document.getElementById('confirmBet').addEventListener('click', () => {
+            const amount = parseInt(document.getElementById('betAmount').value);
+            if (amount && amount > 0 && amount <= balance) {
+                placeBet(amount);
+                closeBetDialog();
+            } else {
+                alert('Please enter a valid amount');
+            }
+        });
+
+        document.getElementById('cancelBet').addEventListener('click', closeBetDialog);
+
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const tab = button.getAttribute('data-tab');
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                document.getElementById('resultsHistory').style.display = tab === 'results' ? 'block' : 'none';
+                document.getElementById('betsHistory').style.display = tab === 'bets' ? 'block' : 'none';
+            });
+        });
+
+        // Initialize
+        setInterval(updateTimer, 1000);
+        updateResultsHistory();
+        updateBetsHistory();
     </script>
 </body>
 </html>
